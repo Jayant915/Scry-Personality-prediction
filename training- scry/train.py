@@ -3,7 +3,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import layers, models
 import os
 
-dataset_path = r"D:\Sem 7 project\Datasets\Dataset 1- kaggle\augmented train"
+dataset_path = r"D:\Sem 7 project\Datasets\scry dataset\augmented train"
 
 # Image Data Loading and Preprocessing 
 img_size = (224, 224)
@@ -52,7 +52,7 @@ model = models.Sequential([
 
 # Compiling
 model.compile(
-    optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),  # same as Teachable Machine
+    optimizer=tf.keras.optimizers.Adam(learning_rate=0.001), 
     loss='categorical_crossentropy',
     metrics=['accuracy']
 )
@@ -61,9 +61,26 @@ model.compile(
 history = model.fit(
     train_data,
     validation_data=val_data,
-    epochs=50  # same as your Teachable Machine setup
+    epochs=50 
 )
 
-model.save("personality_handwriting_model.h5")
+# Unfreeze the top layers for fine-tuning
+base_model.trainable = True
 
-print(" Model training complete and saved as 'personality_handwriting_model.h5'")
+# Recompile with a lower learning rate
+model.compile(
+    optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Train again for a few more epochs
+fine_tune_history = model.fit(
+    train_data,
+    validation_data=val_data,
+    epochs=20
+)
+
+model.save("personality_model.h5")
+
+print(" Model training complete and saved as 'personality_model.h5'")
