@@ -12,7 +12,7 @@ export default function About() {
         </h1>
         <p className="text-lg sm:text-xl text-slate-600">
           Learn how our AI-powered system analyzes handwriting to predict personality traits
-          using advanced machine learning and graphology principles.
+          using Advanced Machine Learning and Graphology principles.
         </p>
       </div>
 
@@ -22,7 +22,7 @@ export default function About() {
           <Brain className="w-16 h-16 mx-auto mb-4" />
           <h2 className="text-white mb-3">Advanced AI Technology</h2>
           <p className="text-purple-100 text-lg max-w-2xl mx-auto">
-            Our system combines machine learning algorithms with graphology research to provide
+            Our system combines Machine Learning algorithms with Graphology research to provide
             insights into personality traits based on handwriting characteristics.
           </p>
         </div>

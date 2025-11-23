@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { FiArrowRight, FiUsers, FiSettings, FiActivity } from "react-icons/fi";
-import HeroImage from "../assets/Flowchart.png"; // Example hero image
-import Feature1 from "../assets/Flowchart.png";
-import Feature2 from "../assets/Flowchart.png";
-import Feature3 from "../assets/Flowchart.png";
+import HeroImage from "../assets/feature.jpg"; 
+import Feature1 from "../assets/feature1.png";
+import Feature2 from "../assets/feature2.png";
+import Feature3 from "../assets/feature3.png";
 
 const Home = () => {
   return (
@@ -104,7 +104,7 @@ const Home = () => {
           <div className="bg-white p-6 rounded-xl shadow-lg flex flex-col items-center">
             <div className="w-12 h-12 mb-4 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
             <h4 className="text-lg font-semibold mb-2 text-purple-900">AI Analysis</h4>
-            <p className="text-gray-700 text-sm">The ML model analyzes slant, spacing, pressure, and letter size.</p>
+            <p className="text-gray-700 text-sm">The ML model analyzes slant, spacing, pressure and letter size.</p>
           </div>
 
           <div className="bg-white p-6 rounded-xl shadow-lg flex flex-col items-center">
