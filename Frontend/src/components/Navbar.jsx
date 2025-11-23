@@ -18,16 +18,17 @@ const Navbar = () => {
 
   const navItems = [
     { path: '/', name: 'Home' },
-   // { path: '/about', name: 'About' },
+    { path: '/about', name: 'About' },   // ✅ Added
     { path: '/upload', name: 'Upload' },
-   // { path: '/working', name: 'Working' },
   ];
 
   return (
     <motion.nav
       className={`fixed w-full z-50 px-4 sm:px-8 py-3 transition-all duration-300 ${
-        scrolled ? 'bg-gray-900/95 backdrop-blur-sm shadow-xl' : 'bg-gray-950/90 backdrop-blur-sm'
-      }`} // NEW Navbar background colors
+        scrolled
+          ? 'bg-gradient-to-r from-violet-600 via-purple-600 to-cyan-600 shadow-xl border-b border-purple-400'
+          : 'bg-gradient-to-r from-violet-600/90 via-purple-600/90 to-cyan-600/90'
+      } backdrop-blur-sm`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
@@ -41,34 +42,36 @@ const Navbar = () => {
         >
           <Link
             to="/"
-            className="text-2xl font-bold bg-clip-text text-transparent tracking-wider"
+            className="text-2xl font-bold text-transparent bg-clip-text tracking-wider"
             style={{
-              backgroundImage: 'linear-gradient(to right, #93c5fd, #a78bfa)' // NEW Logo gradient (light blue to light purple)
+              backgroundImage: 'linear-gradient(to right, #ffffff, #e9d5ff)',
             }}
           >
-            SCRY
+            Scry
           </Link>
         </motion.div>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Menu */}
         <div className="hidden md:flex gap-6 lg:gap-8 items-center">
           {navItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
-              className="relative group text-gray-300 font-medium transition-colors hover:text-blue-300" // NEW Desktop link colors
+              className="relative group text-white font-medium transition-colors hover:text-purple-200"
             >
               {item.name}
+
               {location.pathname === item.path && (
                 <motion.div
                   layoutId="activeNavLink"
-                  className="absolute left-0 right-0 h-0.5 bg-blue-400 bottom-[-4px]" // NEW Active link underline color
+                  className="absolute left-0 right-0 h-0.5 bg-white bottom-[-4px]"
                   transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                 />
               )}
+
               {location.pathname !== item.path && (
                 <motion.div
-                  className="absolute left-0 right-0 h-0.5 bg-blue-400 bottom-[-4px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" // NEW Hover link underline color
+                  className="absolute left-0 right-0 h-0.5 bg-white bottom-[-4px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"
                 />
               )}
             </Link>
@@ -77,15 +80,15 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <motion.button
-          className="md:hidden p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" // NEW Focus ring color
+          className="md:hidden p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
           onClick={() => setIsOpen(!isOpen)}
           whileTap={{ scale: 0.9 }}
           aria-label="Toggle menu"
         >
           {isOpen ? (
-            <FiX className="text-blue-300 text-2xl" /> // NEW Icon color
+            <FiX className="text-white text-2xl" />
           ) : (
-            <FiMenu className="text-blue-300 text-2xl" /> // NEW Icon color
+            <FiMenu className="text-white text-2xl" />
           )}
         </motion.button>
       </div>
@@ -99,7 +102,7 @@ const Navbar = () => {
           closed: { opacity: 0, height: 0 },
         }}
         transition={{ duration: 0.3 }}
-        className="md:hidden overflow-hidden bg-gray-900/95" // NEW Mobile menu background
+        className="md:hidden overflow-hidden bg-gradient-to-r from-violet-600 via-purple-600 to-cyan-600"
       >
         <div className="pt-4 pb-6 px-4 space-y-4">
           {navItems.map((item) => (
@@ -108,8 +111,8 @@ const Navbar = () => {
               to={item.path}
               className={`block px-4 py-2 rounded-lg transition-colors ${
                 location.pathname === item.path
-                  ? 'bg-blue-900/50 text-blue-300' // NEW Active mobile link colors
-                  : 'text-gray-300 hover:bg-gray-800 hover:text-blue-200' // NEW Inactive mobile link colors
+                  ? 'bg-white/20 text-white'
+                  : 'text-white hover:bg-white/10 hover:text-purple-100'
               }`}
               onClick={() => setIsOpen(false)}
             >

@@ -1,8 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import About from './components/About';
+import About  from './components/About';
 import Upload from './components/Upload';
-import Working from './components/Working';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import NotFoundPage from './components/404page';
@@ -17,7 +16,6 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/upload" element={<Upload />} />
-              <Route path="/working" element={<Working />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </div>
