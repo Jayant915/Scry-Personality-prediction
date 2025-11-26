@@ -4,6 +4,7 @@ import About  from './components/About';
 import Upload from './components/Upload';
 import Footer from './components/Footer';
 import Home from './components/Home';
+import Ocr from './components/ocr';
 import NotFoundPage from './components/404page';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/upload" element={<Upload />} />
+              <Route path="/ocr" element={<Ocr />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </div>
