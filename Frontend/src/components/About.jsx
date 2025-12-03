@@ -103,23 +103,23 @@ export default function About() {
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger className="text-slate-700">Openness</AccordionTrigger>
-            <AccordionContent className="text-slate-600">Reflects imagination, creativity, and willingness to try new experiences.</AccordionContent>
+            <AccordionContent className="text-slate-600">Openness reflects your level of curiosity, imagination, and willingness to experience new things. People high in openness tend to be creative, open-minded, and interested in exploring novel ideas. Those lower in openness prefer routine, familiarity, and practical thinking.</AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger className="text-slate-700">Conscientiousness</AccordionTrigger>
-            <AccordionContent className="text-slate-600">Measures organization, responsibility, and self-discipline.</AccordionContent>
+            <AccordionContent className="text-slate-600">Conscientiousness measures discipline, organization, and reliability. High scorers are goal-oriented, responsible, and good at planning. Low scorers may be more spontaneous, flexible, and less focused on structure.</AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">
             <AccordionTrigger className="text-slate-700">Extraversion</AccordionTrigger>
-            <AccordionContent className="text-slate-600">Indicates sociability and assertiveness.</AccordionContent>
+            <AccordionContent className="text-slate-600">Extraversion indicates how energized you feel by social interaction. High extraversion is linked to sociability, assertiveness, and enthusiasm. Low extraversion (introversion) reflects a preference for calm environments, deeper one-on-one interactions, and introspection.</AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-4">
             <AccordionTrigger className="text-slate-700">Agreeableness</AccordionTrigger>
-            <AccordionContent className="text-slate-600">Reflects cooperation and compassion.</AccordionContent>
+            <AccordionContent className="text-slate-600">Agreeableness represents your level of empathy, kindness, and cooperation. Highly agreeable people are compassionate, trusting, and helpful. Lower agreeableness may indicate assertiveness, independence, or a more critical communication style.</AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-5">
             <AccordionTrigger className="text-slate-700">Neuroticism</AccordionTrigger>
-            <AccordionContent className="text-slate-600">Measures emotional stability.</AccordionContent>
+            <AccordionContent className="text-slate-600">Neuroticism measures emotional stability and sensitivity to stress. High neuroticism means stronger emotional reactions, worry, or mood swings. Low neuroticism indicates calmness, resilience, and better stress management.</AccordionContent>
           </AccordionItem>
         </Accordion>
       </Card>

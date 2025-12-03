@@ -1,128 +1,79 @@
 import { motion } from 'framer-motion';
-import { Link, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
-const Navbar = () => {
-  const location = useLocation();
+const Navbar = ({ useLinks = false }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const navItems = [
     { path: '/', name: 'Home' },
-    { path: '/about', name: 'About' },   
     { path: '/upload', name: 'Upload' },
-    { path: '/ocr', name: 'Ocr' },
+    { path: '/about', name: 'About' },
+    { path: '/ocr', name: 'OCR' },
   ];
 
+  const closeMenu = () => setIsOpen(false);
+
+  // Animation variants
+  const dropdownVariants = {
+    closed: { opacity: 0, y: -10, scale: 0.8, transition: { duration: 0.2 } },
+    open: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.3, staggerChildren: 0.05 } },
+  };
+
+  const itemVariants = {
+    closed: { opacity: 0, x: -10 },
+    open: { opacity: 1, x: 0 },
+  };
+
   return (
-    <motion.nav
-      className={`fixed w-full z-50 px-4 sm:px-8 py-3 transition-all duration-300 ${
-        scrolled
-          ? 'bg-gradient-to-r from-violet-600 via-purple-600 to-cyan-600 shadow-xl border-b border-purple-400'
-          : 'bg-gradient-to-r from-violet-600/90 via-purple-600/90 to-cyan-600/90'
-      } backdrop-blur-sm`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        {/* Logo */}
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="flex items-center"
-        >
-          <Link
-            to="/"
-            className="text-2xl font-bold text-transparent bg-clip-text tracking-wider"
-            style={{
-              backgroundImage: 'linear-gradient(to right, #ffffff, #e9d5ff)',
-            }}
-          >
-            Scry
-          </Link>
-        </motion.div>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-violet-600 via-purple-600 to-cyan-600 shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative">
+        {/* Brand */}
+        {useLinks ? (
+          <Link to="/" className="text-2xl font-bold text-white tracking-wide">Scry</Link>
+        ) : (
+          <a href="/" className="text-2xl font-bold text-white tracking-wide">Scry</a>
+        )}
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex gap-6 lg:gap-8 items-center">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className="relative group text-white font-medium transition-colors hover:text-purple-200"
-            >
-              {item.name}
-
-              {location.pathname === item.path && (
-                <motion.div
-                  layoutId="activeNavLink"
-                  className="absolute left-0 right-0 h-0.5 bg-white bottom-[-4px]"
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-
-              {location.pathname !== item.path && (
-                <motion.div
-                  className="absolute left-0 right-0 h-0.5 bg-white bottom-[-4px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"
-                />
-              )}
-            </Link>
-          ))}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <motion.button
-          className="md:hidden p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300"
+        {/* Hamburger Button */}
+        <button
           onClick={() => setIsOpen(!isOpen)}
-          whileTap={{ scale: 0.9 }}
-          aria-label="Toggle menu"
+          className="flex flex-col justify-between h-6 w-6 p-1 relative z-50"
         >
-          {isOpen ? (
-            <FiX className="text-white text-2xl" />
-          ) : (
-            <FiMenu className="text-white text-2xl" />
-          )}
-        </motion.button>
+          <span className={`block h-0.5 w-full bg-white transform transition duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
+          <span className={`block h-0.5 w-full bg-white transition duration-300 ${isOpen ? 'opacity-0' : ''}`} />
+          <span className={`block h-0.5 w-full bg-white transform transition duration-300 ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+        </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Dropdown Menu below hamburger */}
       <motion.div
-        initial={false}
+        initial="closed"
         animate={isOpen ? 'open' : 'closed'}
-        variants={{
-          open: { opacity: 1, height: 'auto' },
-          closed: { opacity: 0, height: 0 },
-        }}
-        transition={{ duration: 0.3 }}
-        className="md:hidden overflow-hidden bg-gradient-to-r from-violet-600 via-purple-600 to-cyan-600"
+        variants={dropdownVariants}
+        className="absolute right-4 mt-2 bg-white rounded-lg shadow-lg overflow-hidden min-w-[150px] z-40"
       >
-        <div className="pt-4 pb-6 px-4 space-y-4">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`block px-4 py-2 rounded-lg transition-colors ${
-                location.pathname === item.path
-                  ? 'bg-white/20 text-white'
-                  : 'text-white hover:bg-white/10 hover:text-purple-100'
-              }`}
-              onClick={() => setIsOpen(false)}
-            >
-              {item.name}
-            </Link>
-          ))}
+        <div className="flex flex-col">
+          {navItems.map(item => {
+            const linkClasses = `block px-4 py-2 text-gray-800 hover:bg-gray-200 font-medium`;
+
+            return useLinks ? (
+              <motion.div key={item.path} variants={itemVariants}>
+                <Link to={item.path} className={linkClasses} onClick={closeMenu}>
+                  {item.name}
+                </Link>
+              </motion.div>
+            ) : (
+              <motion.div key={item.path} variants={itemVariants}>
+                <a href={item.path} className={linkClasses} onClick={closeMenu}>
+                  {item.name}
+                </a>
+              </motion.div>
+            );
+          })}
         </div>
       </motion.div>
-    </motion.nav>
+    </nav>
   );
 };
 
