@@ -18,6 +18,8 @@ const Upload = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
   const [history, setHistory] = useState([]);
+  // ADDED STATE: To store the public S3 URL returned by the backend
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null); 
 
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
@@ -57,6 +59,7 @@ const Upload = () => {
     ctxRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     setCanvasData(null);
     setAnalysisResult(null);
+    setUploadedImageUrl(null); // Clear the uploaded image URL as well
   };
 
   const handleFileUpload = (e) => {
@@ -67,7 +70,7 @@ const Upload = () => {
       return;
     }
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      setError(`File must be smaller than ${MAX_FILE_SIZE_MB}MB`);
+      setError(`File must be smaller than $ {MAX_FILE_SIZE_MB}MB`);
       return;
     }
 
@@ -79,6 +82,7 @@ const Upload = () => {
         ctxRef.current.clearRect(0, 0, canvas.width, canvas.height);
         ctxRef.current.drawImage(img, 0, 0, canvas.width, canvas.height);
         setCanvasData(canvas.toDataURL('image/png'));
+        setUploadedImageUrl(null); // Reset URL on new file upload
       };
       img.src = reader.result;
     };
@@ -91,23 +95,29 @@ const Upload = () => {
     setCanvasData(dataUrl);
     setIsProcessing(true);
     setError(null);
+    setUploadedImageUrl(null); // Clear previous URL
 
     try {
       const blob = await (await fetch(dataUrl)).blob();
       const formData = new FormData();
       formData.append('image', new File([blob], 'handwriting.png', { type: 'image/png' }));
 
-      const response = await fetch('http://127.0.0.1:5000/analyze', {
+      // --- START OF CRITICAL CHANGE ---
+      // 1. UPDATE ENDPOINT to the new combined route: /upload_and_analyze
+      const response = await fetch('http://127.0.0.1:5000/upload_and_analyze', {
         method: 'POST',
         body: formData,
       });
 
       if (!response.ok) {
-        const errData = await response.json().catch(() => ({ message: 'Server error' }));
-        throw new Error(errData.message || 'Server error');
+        const errData = await response.json().catch(() => ({ message: 'Server error or CORS issue' }));
+        throw new Error(errData.error || errData.message || 'Server error');
       }
 
+      // 2. GET THE NEW RESPONSE DATA
       const result = await response.json();
+      // --- END OF CRITICAL CHANGE ---
+      
       const predictedClass = result.class?.replace(/[^a-zA-Z]/g, '').trim() || 'Unknown';
 
       let personalityMessage = '';
@@ -137,10 +147,13 @@ const Upload = () => {
         defect_description: result.defect_description || 'No additional notes.',
         confidence: parseFloat(result.confidence) || 0,
         timestamp: new Date().toLocaleString(),
-        image: dataUrl,
+        // CRITICAL: Use the S3 URL for display and history if available,
+        // otherwise fall back to the local dataURL
+        image: result.image_url || dataUrl, 
       };
 
       setAnalysisResult(analysis);
+      setUploadedImageUrl(result.image_url || null); // Store the public URL separately
       setHistory(prev => [analysis, ...prev]);
     } catch (err) {
       console.error(err);
@@ -233,12 +246,13 @@ const Upload = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="flex flex-col items-center justify-center bg-white rounded-lg shadow-lg p-4">
                   <img
-                    src={analysisResult.image}
+                    // CRITICAL: Use the URL from the analysis result (which is the S3 URL)
+                    src={analysisResult.image} 
                     alt="handwriting"
                     className="w-48 h-48 object-cover rounded-lg border-2 border-blue-300 shadow-md"
                   />
                 </div>
-
+                
                 <div className="flex flex-col justify-center gap-4">
                   <p className="text-purple-700 font-semibold text-lg">
                     Class: {analysisResult.predictedClass}
@@ -253,7 +267,7 @@ const Upload = () => {
                     <div className="w-full h-4 bg-blue-200 rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
-                        animate={{ width: `${analysisResult.confidence * 100}%` }}
+                        animate={{ width: `${analysisResult.confidence * 100}%`}}
                         transition={{ duration: 1.2, ease: 'easeOut' }}
                         className="h-full bg-gradient-to-r from-purple-600 to-blue-500"
                       />
@@ -281,6 +295,7 @@ const Upload = () => {
                   className="flex gap-4 bg-white p-3 rounded-lg border border-blue-200 shadow-sm"
                 >
                   <img
+                    // CRITICAL: This now uses the S3 URL saved in the history item
                     src={item.image}
                     alt="handwriting"
                     className="w-24 h-24 object-cover rounded-lg border border-blue-200 shadow"
