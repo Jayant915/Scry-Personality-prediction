@@ -238,6 +238,7 @@ const Upload = () => {
 
                 {/* TEXT INFO */}
                 <div className="flex flex-col justify-center gap-4">
+                  
                   <p className="text-purple-700 font-semibold text-lg">
                     Class: {analysisResult.predictedClass}
                   </p>
@@ -245,6 +246,9 @@ const Upload = () => {
                   <p className="text-blue-700 font-medium">
                     Personality: {analysisResult.personalityMessage}
                   </p>
+<p className="text-purple-700">
+  <span className="font-semibold">Notes:</span> {analysisResult.defect_description}
+</p>
 
                   {/* CONFIDENCE BAR */}
                   <div>
