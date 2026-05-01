@@ -28,3 +28,22 @@
 **/*.njsproj
 **/*.sln
 **/*.sw?
+node_modules
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Environment
+.env
+
+# Backend uploads
+Backend/uploads/
+
+# OS
+.DS_Store
+Thumbs.db
