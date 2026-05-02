@@ -7,6 +7,7 @@ const Navbar = ({ useLinks = false }) => {
 
   const navItems = [
     { path: '/', name: 'Home' },
+    { path: '/dashboard', name: 'Dashboard' },
     { path: '/upload', name: 'Analyze' },
     { path: '/about', name: 'About' },
     { path: '/ocr', name: 'OCR' },
@@ -14,67 +15,182 @@ const Navbar = ({ useLinks = false }) => {
 
   const closeMenu = () => setIsOpen(false);
 
-  // Animation variants
   const dropdownVariants = {
-    closed: { opacity: 0, y: -10, scale: 0.8, transition: { duration: 0.2 } },
-    open: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.3, staggerChildren: 0.05 } },
+    closed: { opacity: 0, y: -10, scale: 0.92, pointerEvents: 'none', transition: { duration: 0.2 } },
+    open:   { opacity: 1, y: 0,   scale: 1,    pointerEvents: 'auto', transition: { duration: 0.25, staggerChildren: 0.05 } },
   };
 
   const itemVariants = {
-    closed: { opacity: 0, x: -10 },
-    open: { opacity: 1, x: 0 },
+    closed: { opacity: 0, x: 10 },
+    open:   { opacity: 1, x: 0  },
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-violet-600 via-purple-600 to-cyan-600 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between relative">
-        {/* Brand */}
+    <>
+      <style>{`
+        .scry-nav-link {
+          display: block;
+          padding: 9px 18px;
+          font-size: 13px;
+          font-weight: 500;
+          color: rgba(255,255,255,0.65);
+          letter-spacing: 0.04em;
+          transition: all 0.18s;
+          border-left: 2px solid transparent;
+          background: transparent;
+          text-decoration: none;
+        }
+        .scry-nav-link:hover {
+          color: #c084fc;
+          background: rgba(192,132,252,0.08);
+          border-left-color: #c084fc;
+        }
+        .scry-hamburger-line {
+          display: block;
+          height: 1.5px;
+          width: 100%;
+          background: rgba(255,255,255,0.7);
+          transform-origin: center;
+          transition: all 0.3s ease;
+          border-radius: 2px;
+        }
+      `}</style>
+
+      <nav style={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0,
+        zIndex: 50,
+        height: 58,
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 24px',
+        justifyContent: 'space-between',
+        borderBottom: '1px solid rgba(139,92,246,0.18)',
+        background: 'rgba(10,6,18,0.75)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
+      }}>
+
+        {/* ── Brand ── */}
         {useLinks ? (
-          <Link to="/" className="text-2xl font-bold text-white tracking-wide">Scry</Link>
+          <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <BrandLogo />
+          </Link>
         ) : (
-          <a href="/" className="text-2xl font-bold text-white tracking-wide">Scry</a>
+          <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <BrandLogo />
+          </a>
         )}
 
-        {/* Hamburger Button */}
+        {/* ── Hamburger ── */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="flex flex-col justify-between h-6 w-6 p-1 relative z-50"
+          onClick={() => setIsOpen(prev => !prev)}
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: '6px', display: 'flex', flexDirection: 'column',
+            justifyContent: 'space-between', height: 22, width: 24,
+            position: 'relative', zIndex: 51,
+          }}
+          aria-label="Toggle menu"
         >
-          <span className={`block h-0.5 w-full bg-white transform transition duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
-          <span className={`block h-0.5 w-full bg-white transition duration-300 ${isOpen ? 'opacity-0' : ''}`} />
-          <span className={`block h-0.5 w-full bg-white transform transition duration-300 ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+          <span className="scry-hamburger-line" style={{
+            transform: isOpen ? 'rotate(45deg) translateY(7px)' : 'none',
+            background: isOpen ? '#c084fc' : 'rgba(255,255,255,0.7)',
+          }} />
+          <span className="scry-hamburger-line" style={{
+            opacity: isOpen ? 0 : 1,
+            transform: isOpen ? 'scaleX(0)' : 'none',
+          }} />
+          <span className="scry-hamburger-line" style={{
+            transform: isOpen ? 'rotate(-45deg) translateY(-7px)' : 'none',
+            background: isOpen ? '#c084fc' : 'rgba(255,255,255,0.7)',
+          }} />
         </button>
-      </div>
 
-      {/* Dropdown Menu below hamburger */}
-      <motion.div
-        initial="closed"
-        animate={isOpen ? 'open' : 'closed'}
-        variants={dropdownVariants}
-        className="absolute right-4 mt-2 bg-white rounded-lg shadow-lg overflow-hidden min-w-[150px] z-40"
-      >
-        <div className="flex flex-col">
-          {navItems.map(item => {
-            const linkClasses = `block px-4 py-2 text-gray-800 hover:bg-gray-200 font-medium`;
+        {/* ── Dropdown ── */}
+        <motion.div
+          initial="closed"
+          animate={isOpen ? 'open' : 'closed'}
+          variants={dropdownVariants}
+          style={{
+            position: 'absolute',
+            top: 54,
+            right: 16,
+            minWidth: 160,
+            borderRadius: 12,
+            overflow: 'hidden',
+            border: '1px solid rgba(139,92,246,0.25)',
+            background: 'rgba(13,9,26,0.95)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(192,132,252,0.1)',
+            zIndex: 40,
+          }}
+        >
+          {/* subtle top glow line */}
+          <div style={{
+            height: 1,
+            background: 'linear-gradient(90deg, transparent, rgba(192,132,252,0.5), rgba(103,232,249,0.3), transparent)',
+          }} />
 
-            return useLinks ? (
+          <div style={{ padding: '6px 0' }}>
+            {navItems.map((item, i) => (
               <motion.div key={item.path} variants={itemVariants}>
-                <Link to={item.path} className={linkClasses} onClick={closeMenu}>
-                  {item.name}
-                </Link>
+                {useLinks ? (
+                  <Link to={item.path} className="scry-nav-link" onClick={closeMenu}>
+                    {item.name}
+                  </Link>
+                ) : (
+                  <a href={item.path} className="scry-nav-link" onClick={closeMenu}>
+                    {item.name}
+                  </a>
+                )}
+                {i < navItems.length - 1 && (
+                  <div style={{ height: '0.5px', background: 'rgba(139,92,246,0.1)', margin: '0 12px' }} />
+                )}
               </motion.div>
-            ) : (
-              <motion.div key={item.path} variants={itemVariants}>
-                <a href={item.path} className={linkClasses} onClick={closeMenu}>
-                  {item.name}
-                </a>
-              </motion.div>
-            );
-          })}
-        </div>
-      </motion.div>
-    </nav>
+            ))}
+          </div>
+
+          {/* bottom badge */}
+          <div style={{
+            padding: '8px 18px',
+            borderTop: '1px solid rgba(139,92,246,0.1)',
+            display: 'flex', alignItems: 'center', gap: 6,
+          }}>
+            <span style={{
+              width: 5, height: 5, borderRadius: '50%',
+              background: '#6ee7b7',
+              boxShadow: '0 0 6px #6ee7b7',
+              flexShrink: 0,
+            }} />
+            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.1em' }}>
+              BIG FIVE ANALYSIS
+            </span>
+          </div>
+        </motion.div>
+      </nav>
+    </>
   );
 };
+
+// ── Extracted brand so both <Link> and <a> can reuse it ──
+const BrandLogo = () => (
+  <>
+    <div style={{
+      width: 28, height: 28, borderRadius: 8,
+      background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: 13, fontWeight: 800, color: '#fff',
+      boxShadow: '0 0 14px rgba(124,58,237,0.55)',
+      flexShrink: 0,
+    }}>S</div>
+    <span style={{
+      fontSize: 17, fontWeight: 700,
+      letterSpacing: '0.04em', color: '#fff',
+    }}>Scry</span>
+  </>
+);
 
 export default Navbar;
