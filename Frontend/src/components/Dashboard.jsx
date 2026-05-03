@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import sampleImg2 from "../assets/sample.jpeg";
 
 const TRAITS = {
   Neuroticism:       { score: 0.92, color: "#c084fc", glow: "#a855f7", label: "Emotionally Sensitive" },
@@ -287,8 +288,8 @@ export default function ScryDashboard() {
               </div>
               <div style={{ position: "relative", height: 200, overflow: "hidden" }}>
                 <img
-                  src="/api/placeholder/400/200"
-                  alt="handwriting sample"
+                  src={sampleImg2}
+                  alt="test"
                   style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.85 }}
                 />
                 <div style={{
