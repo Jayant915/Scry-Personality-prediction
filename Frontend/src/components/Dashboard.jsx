@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import sampleImg from "../assets/sample.jpg";
+import sampleImg1 from "../assets/sample.jpg";
 
 const TRAITS = {
   Neuroticism:       { score: 0.92, color: "#c084fc", glow: "#a855f7", label: "Emotionally Sensitive" },
@@ -288,7 +288,7 @@ export default function ScryDashboard() {
               </div>
               <div style={{ position: "relative", height: 200, overflow: "hidden" }}>
                 <img
-                  src={sampleImg}
+                  src={sampleImg1}
                   alt="test"
                   style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.85 }}
                 />
